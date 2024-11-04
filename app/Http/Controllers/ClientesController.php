@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class UsuariosController extends Controller
+class ClientesController extends Controller
 {
     private function Verificar(Request $request, $cpf = null)
     {
-        // Regras de validação ajustadas para permitir atualizações parciais
-        $cpfRule = 'nullable|string|size:11|regex:/^\d+$/';
-        $cpfRule .= $cpf ? '|unique:CLIENTES,CPF,' . $cpf . ',CPF' : '|unique:CLIENTES';
+        $RegraCPF = 'nullable|string|size:11|regex:/^\d+$/';
+        $RegraCPF .= $cpf ? "|unique:CLIENTES,CPF,$cpf,CPF" : '|unique:CLIENTES';
 
         $dadosValidados = Validator::make($request->all(), [
-            'CPF' => $cpfRule,
+            'CPF' => $RegraCPF,
             'NOME' => 'nullable|string|max:30',
             'TELEFONE' => 'nullable|string|size:11'
         ], [
@@ -31,11 +31,11 @@ class UsuariosController extends Controller
     public function Selecionar($cpf = null)
     {
         if ($cpf == null) {
-            $usuarios = DB::table('CLIENTES')->get();
-            return response()->json($usuarios);
+            $cliente = DB::table('CLIENTES')->get();
+            return response()->json($cliente);
         } else {
-            $usuario = DB::table('CLIENTES')->where('CPF', $cpf)->first();
-            return $usuario ? response()->json($usuario) : response()->json(['Erro' => 'Usuário não encontrado'], 404);
+            $colaborador = DB::table('CLIENTES')->where('CPF', $cpf)->first();
+            return $colaborador ? response()->json($colaborador) : response()->json(['Erro' => 'Colaborador não encontrado'], 404);
         }
     }
 
@@ -49,9 +49,9 @@ class UsuariosController extends Controller
 
         try {
             DB::table('CLIENTES')->insert($dadosValidados->validated());
-            return response()->json(['Sucesso' => 'Usuário criado com sucesso!'], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao criar usuário: ' . $e->getMessage()], 500);
+            return response()->json(['Sucesso' => 'Colaborador criado com sucesso!'], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Erro ao criar Colaborador: ' . $e->getMessage()], 500);
         }
     }
 
@@ -74,31 +74,33 @@ class UsuariosController extends Controller
             if ($atualizado) {
                 return response()->json(['Sucesso' => 'Atualizado com sucesso!'], 200);
             } else {
-                return response()->json(['Erro' => 'Usuário não encontrado'], 404);
+                return response()->json(['Erro' => 'Colaborador não encontrado'], 404);
             }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao atualizar usuário: ' . $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Erro ao atualizar Colaborador: ' . $e->getMessage()], 500);
         }
     }
 
-    public function Deletar($cpf)
-{
-    try {
-        $usuario = $this->Selecionar($cpf);
+    public function Deletar($cpf = null)
+    {
+        try {
+            $colaborador = $this->Selecionar($cpf);
 
-        if ($usuario->getStatusCode() == 404)
-        {
-            return $usuario;
+            // Verifica se o Colaborador foi encontrado
+            if ($colaborador->getStatusCode() == 404) {
+                return $colaborador;
+            }
+
+            $excluidoComSucesso = DB::table('CLIENTES')->where('cpf', $cpf)->delete() > 0;
+
+            // Verifica se pelo menos uma exclusão ocorreu
+            if (!$excluidoComSucesso) {
+                return response()->json(['Erro' => 'Nenhum registro encontrado para excluir.'], 404);
+            } else {
+                return response()->json(['Sucesso' => 'Colaborador excluído com sucesso!']);
+            }
+        } catch (Exception $e) {
+            return response()->json(['Erro' => 'Erro ao excluir Colaborador: ' . $e->getMessage()], 500);
         }
-        
-        DB::table('LOGINS')->where('cpf', $cpf)->delete();
-        DB::table('CLIENTES')->where('cpf', $cpf)->delete();
-        
-
-        return response()->json(['Sucesso' => 'Usuário excluído com sucesso!']);
-    } catch (\Exception $e) {
-        return response()->json(['Erro' => 'Erro ao excluir usuário: ' . $e->getMessage()], 500);
     }
-}
-
 }
