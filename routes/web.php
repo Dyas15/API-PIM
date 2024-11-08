@@ -26,12 +26,20 @@ $router->group(['prefix' => '/api/logins'], function () use ($router) {
     $router->delete('/{tipo}/{cpf}', 'LoginsController@Desativar');
 });
 
-$router->group(['prefix' => '/api/familia'], function () use ($router) {
+$router->group(['prefix' => '/api/familias'], function () use ($router) {
     $router->get('/{nome}', 'FamiliaController@Selecionar');
     $router->get('/', 'FamiliaController@Selecionar');
     $router->post('/', 'FamiliaController@Criar');
     $router->put('/{valor}', 'FamiliaController@Atualizar');
     $router->delete('/{valor}', 'FamiliaController@Deletar');
+});
+
+$router->group(['prefix' => '/api/pagamentos'], function () use ($router) {
+    $router->get('/{nome}', 'PagamentosController@Selecionar');
+    $router->get('/', 'PagamentosController@Selecionar');
+    $router->post('/', 'PagamentosController@Criar');
+    $router->put('/{valor}', 'PagamentosController@Atualizar');
+    $router->delete('/{valor}', 'PagamentosController@Deletar');
 });
 
 $router->get('/teste', 'TesteController@index');
