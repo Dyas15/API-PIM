@@ -114,7 +114,7 @@ class LoginsController extends Controller
                 $excluidoComSucesso = DB::table($tabela)->where('CPF', $cpf)->update(['STATUS' => 0]);
 
                 if ($excluidoComSucesso) {
-                    return response()->json(['Sucesso' => "$tipo excluído com sucesso!"]);
+                    return response()->json(['Sucesso' => "$tipo desativado com sucesso!"]);
                 }
             }
         } catch (Exception $e) {
