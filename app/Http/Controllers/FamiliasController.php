@@ -8,7 +8,7 @@ use Laravel\Lumen\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class FamiliaController extends Controller
+class FamiliasController extends Controller
 {
 
     private function Verificar(Request $request)

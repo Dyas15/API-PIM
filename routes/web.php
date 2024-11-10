@@ -2,13 +2,20 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-$router->group(['prefix' => '/api/clientes'], function () use ($router) {
-    $router->get('/{cpf:[0-9]+}', 'ClientesController@Selecionar');
-    $router->get('/', 'ClientesController@Selecionar');
-    $router->post('/', 'ClientesController@Criar');
-    $router->put('/{cpf}', 'ClientesController@Atualizar');
-    $router->delete('/{cpf}', 'ClientesController@Deletar');
-});
+$tipos = ['clientes', 'colaboradores', 'logins', 'familias', 'pagamentos', 'estoque', 'fornecedores'];
+
+// foreach ($tipos as $tipo) {
+//     $controller = ucfirst($tipo) . 'Controller';
+
+//     $router->group(['prefix' => "/api/$tipo"], function () use ($router, $controller) {
+//         $router->get('/{cpf:[0-9]+}', "$controller@Selecionar");
+//         $router->get('/', "$controller@Selecionar");
+//         $router->post('/', "$controller@Criar");
+//         $router->put('/{cpf}', "$controller@Atualizar");
+//         $router->delete('/{cpf}', "$controller@Deletar");
+//     });
+// }
+
 
 $router->group(['prefix' => '/api/colaboradores'], function () use ($router) {
     $router->get('/{cpf:[0-9]+}', 'ColaboradoresController@Selecionar');
@@ -27,11 +34,11 @@ $router->group(['prefix' => '/api/logins'], function () use ($router) {
 });
 
 $router->group(['prefix' => '/api/familias'], function () use ($router) {
-    $router->get('/{nome}', 'FamiliaController@Selecionar');
-    $router->get('/', 'FamiliaController@Selecionar');
-    $router->post('/', 'FamiliaController@Criar');
-    $router->put('/{valor}', 'FamiliaController@Atualizar');
-    $router->delete('/{valor}', 'FamiliaController@Deletar');
+    $router->get('/{nome}', 'FamiliasController@Selecionar');
+    $router->get('/', 'FamiliasController@Selecionar');
+    $router->post('/', 'FamiliasController@Criar');
+    $router->put('/{valor}', 'FamiliasController@Atualizar');
+    $router->delete('/{valor}', 'FamiliasController@Deletar');
 });
 
 $router->group(['prefix' => '/api/pagamentos'], function () use ($router) {
@@ -40,6 +47,22 @@ $router->group(['prefix' => '/api/pagamentos'], function () use ($router) {
     $router->post('/', 'PagamentosController@Criar');
     $router->put('/{valor}', 'PagamentosController@Atualizar');
     $router->delete('/{valor}', 'PagamentosController@Deletar');
+});
+
+$router->group(['prefix' => '/api/estoque'], function () use ($router) {
+    $router->get('/{nome}', 'EstoqueController@Selecionar');
+    $router->get('/', 'EstoqueController@Selecionar');
+    $router->post('/', 'EstoqueController@Criar');
+    $router->put('/{valor}', 'EstoqueController@Atualizar');
+    $router->delete('/{valor}', 'EstoqueController@Deletar');
+});
+
+$router->group(['prefix' => '/api/fornecedores'], function () use ($router) {
+    $router->get('/{cnpj}', 'FornecedoresController@Selecionar');
+    $router->get('/', 'FornecedoresController@Selecionar');
+    $router->post('/', 'FornecedoresController@Criar');
+    $router->put('/{cnpj}', 'FornecedoresController@Atualizar');
+    $router->delete('/{cnpj}', 'FornecedoresController@Deletar');
 });
 
 $router->get('/teste', 'TesteController@index');
