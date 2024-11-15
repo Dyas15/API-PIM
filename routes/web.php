@@ -2,7 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-$tipos = ['clientes', 'colaboradores', 'logins', 'familias', 'pagamentos', 'estoque', 'fornecedores'];
+//$tipos = ['clientes', 'colaboradores', 'logins', 'familias', 'pagamentos', 'estoque', 'fornecedores'];
 
 // foreach ($tipos as $tipo) {
 //     $controller = ucfirst($tipo) . 'Controller';
@@ -15,6 +15,14 @@ $tipos = ['clientes', 'colaboradores', 'logins', 'familias', 'pagamentos', 'esto
 //         $router->delete('/{cpf}', "$controller@Deletar");
 //     });
 // }
+
+$router->group(['prefix' => '/api/clientes'], function () use ($router) {
+    $router->get('/{cpf:[0-9]+}', 'ClientesController@Selecionar');
+    $router->get('/', 'ClientesController@Selecionar');
+    $router->post('/', 'ClientesController@Criar');
+    $router->put('/{cpf}', 'ClientesController@Atualizar');
+    $router->delete('/{cpf}', 'ClientesController@Deletar');
+});
 
 
 $router->group(['prefix' => '/api/colaboradores'], function () use ($router) {
@@ -42,19 +50,11 @@ $router->group(['prefix' => '/api/familias'], function () use ($router) {
 });
 
 $router->group(['prefix' => '/api/pagamentos'], function () use ($router) {
-    $router->get('/{nome}', 'PagamentosController@Selecionar');
+    $router->get('/{valor}', 'PagamentosController@Selecionar');
     $router->get('/', 'PagamentosController@Selecionar');
     $router->post('/', 'PagamentosController@Criar');
     $router->put('/{valor}', 'PagamentosController@Atualizar');
     $router->delete('/{valor}', 'PagamentosController@Deletar');
-});
-
-$router->group(['prefix' => '/api/estoque'], function () use ($router) {
-    $router->get('/{nome}', 'EstoqueController@Selecionar');
-    $router->get('/', 'EstoqueController@Selecionar');
-    $router->post('/', 'EstoqueController@Criar');
-    $router->put('/{valor}', 'EstoqueController@Atualizar');
-    $router->delete('/{valor}', 'EstoqueController@Deletar');
 });
 
 $router->group(['prefix' => '/api/fornecedores'], function () use ($router) {
@@ -63,6 +63,30 @@ $router->group(['prefix' => '/api/fornecedores'], function () use ($router) {
     $router->post('/', 'FornecedoresController@Criar');
     $router->put('/{cnpj}', 'FornecedoresController@Atualizar');
     $router->delete('/{cnpj}', 'FornecedoresController@Deletar');
+});
+
+$router->group(['prefix' => '/api/vendas'], function () use ($router) {
+    $router->get('/{id}', 'VendasController@Selecionar');
+    $router->get('/', 'VendasController@Selecionar');
+    $router->post('/', 'VendasController@Criar');
+    $router->put('/{id}', 'VendasController@Atualizar');
+    $router->delete('/{id}', 'VendasController@Deletar');
+});
+
+$router->group(['prefix' => '/api/estoque'], function () use ($router) {
+    $router->get('/{id}', 'EstoqueController@Selecionar');
+    $router->get('/', 'EstoqueController@Selecionar');
+    $router->post('/', 'EstoqueController@Criar');
+    $router->put('/{id}', 'EstoqueController@Atualizar');
+    $router->delete('/{id}', 'EstoqueController@Deletar');
+});
+
+$router->group(['prefix' => '/api/produtos'], function () use ($router) {
+    $router->get('/{id}', 'ProdutosController@Selecionar');
+    $router->get('/', 'ProdutosController@Selecionar');
+    $router->post('/', 'ProdutosController@Criar');
+    $router->put('/{id}', 'ProdutosController@Atualizar');
+    $router->delete('/{id}', 'ProdutosController@Deletar');
 });
 
 $router->get('/teste', 'TesteController@index');

@@ -29,7 +29,7 @@ class PagamentosController extends Controller
             $familia = DB::table('FORMAS_PAGAMENTO')->get();
             return response()->json($familia);
         } else {
-            $familia = DB::table('FORMAS_PAGAMENTO')->where('PAGAMENTO', 'like', "%$valor%")->get();
+            $familia = DB::table('FORMAS_PAGAMENTO')->where('ID', $valor)->get();
             return $familia ? response()->json($familia) : response()->json(['Erro' => 'Forma de pagamento não encontrada'], 404);
         }
     }
