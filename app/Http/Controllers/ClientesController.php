@@ -86,15 +86,15 @@ class ClientesController extends Controller
         try {
             $cliente = $this->Selecionar($cpf);
 
-            // Verifica se o cliente foi encontrado
             if ($cliente->getStatusCode() == 404) {
                 return $cliente;
             }
 
-            $excluidoComSucesso = DB::table('CLIENTES')->where('cpf', $cpf)->delete() > 0;
+            $dadosUsuario = DB::table('LOGINS_USUARIOS')->where('cpf', $cpf)->delete() > 0;
+            $dadosCliente = DB::table('CLIENTES')->where('cpf', $cpf)->delete() > 0;
 
-            // Verifica se pelo menos uma exclusão ocorreu
-            if (!$excluidoComSucesso) {
+
+            if (!$dadosCliente && !$dadosUsuario) {
                 return response()->json(['Erro' => 'Nenhum registro encontrado para excluir.'], 404);
             } else {
                 return response()->json(['Sucesso' => 'Cliente excluído com sucesso!']);

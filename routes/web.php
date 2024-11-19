@@ -34,6 +34,7 @@ $router->group(['prefix' => '/api/colaboradores'], function () use ($router) {
 });
 
 $router->group(['prefix' => '/api/logins'], function () use ($router) {
+    $router->get('/', 'LoginsController@Erro');
     $router->get('/{tipo}/{cpf}', 'LoginsController@Selecionar');
     $router->get('/{tipo}', 'LoginsController@Selecionar');
     $router->post('/{tipo}', 'LoginsController@Criar');

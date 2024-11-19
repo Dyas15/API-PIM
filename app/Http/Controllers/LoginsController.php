@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class LoginsController extends Controller
 {
-    private function Verificar(Request $request,$tipo, $cpf = null)
+    private function Verificar(Request $request, $tipo, $cpf = null)
     {
         $tipo = strtoupper($tipo);
         $RegraCPF = 'nullable|string|size:11|regex:/^\d+$/';
@@ -47,6 +48,11 @@ class LoginsController extends Controller
         return response()->json(['Erro' => 'Tipo inválido. Insira apenas Cliente ou Colaborador.'], 400);
     }
 
+    public function Erro()
+    {
+        return response()->json(['Erro' => 'Por favor, escolha entre LOGINS_CLIENTES ou LOGINS_COLABORADOR!'], 400);
+    }
+
     public function Criar(Request $request, $tipo)
     {
         $tabela = $tipo == "cliente" ? 'LOGINS_CLIENTES' : ($tipo == "colaborador" ? 'LOGINS_COLABORADOR' : null);
@@ -60,13 +66,17 @@ class LoginsController extends Controller
 
         if ($tabela) {
             try {
-                DB::table($tabela)->insert($dadosValidados->validated());
+                $dados = $dadosValidados->validated();
+                if (!empty($dados['SENHA'])) {
+                    $dados['SENHA'] = Hash::make($dados['SENHA']);
+                }
+                DB::table($tabela)->insert($dados);
                 return response()->json(['Sucesso' => "Login de $tipo criado com sucesso!"], 201);
             } catch (Exception $e) {
                 if ($e->getCode() == 23000) {
-                    return response()->json(['error' => "Erro ao criar login de $tipo: Necessário criar o $tipo primeiro! "], 500);
+                    return response()->json(['error' => "Necessário criar o $tipo primeiro! "], 500);
                 } else {
-                    return response()->json(['error' => "Erro ao criar login de $tipo: " . $e->getMessage()], 500);
+                    return response()->json(['error' => $e->getMessage()], 500);
                 }
             }
         }
@@ -85,6 +95,9 @@ class LoginsController extends Controller
 
         try {
             $dadosParaAtualizar = array_filter($dadosValidados->validated());
+            if (isset($dadosParaAtualizar['SENHA'])) {
+                $dadosParaAtualizar['SENHA'] = Hash::make($dadosParaAtualizar['SENHA']);
+            }
 
             if (empty($dadosParaAtualizar)) {
                 return response()->json(['Erro' => 'Nenhum dado fornecido para atualização'], 422);
@@ -118,7 +131,7 @@ class LoginsController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return response()->json(['Erro' => "Erro ao excluir $tipo: " . $e->getMessage()], 500);
+            return response()->json(['Erro' => "Erro ao desativar $tipo: " . $e->getMessage()], 500);
         }
     }
 }
