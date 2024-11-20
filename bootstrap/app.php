@@ -60,6 +60,10 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('mail');
+$app->configure('view');
+$app->instance('path.views', app()->basePath().DIRECTORY_SEPARATOR.'resources/views');
+$app->instance('path.config', app()->basePath().DIRECTORY_SEPARATOR.'config');
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +84,13 @@ $app->configure('app');
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
+// $app->middleware([
+//     Illuminate\Session\Middleware\StartSession::class,
+//     Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//     App\Http\Middleware\VerifyCsrfToken::class,
+// ]);
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -94,6 +105,10 @@ $app->configure('app');
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+
+
+
 
 /*
 |--------------------------------------------------------------------------

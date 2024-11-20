@@ -90,4 +90,16 @@ $router->group(['prefix' => '/api/produtos'], function () use ($router) {
     $router->delete('/{id}', 'ProdutosController@Deletar');
 });
 
+$router->group(['prefix' => '/api/redefinicao'], function () use ($router) {
+    $router->get('/senha-alterada', function () {
+        return view('emails.changed_password');
+    });
+    $router->get('/{token}', function ($token) {
+        return view('emails.reset')->with(['token' => $token]);
+    });
+    $router->post('/resetar', 'RedefinicaoController@ResetarSenha');
+    $router->post('/enviar', 'RedefinicaoController@EnviarEmailDeReset');
+});
+
+
 $router->get('/teste', 'TesteController@index');
