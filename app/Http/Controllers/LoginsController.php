@@ -20,7 +20,8 @@ class LoginsController extends Controller
         $dadosValidados = Validator::make($request->all(), [
             'CPF' => $RegraCPF,
             'SENHA' => 'nullable|string|max:100|min:5',
-            'STATUS' => 'nullable|boolean|size:1'
+            'STATUS' => 'nullable|boolean|size:1',
+            'EMAIL' => 'nullable|string|max:255|min:10'
         ], [
             'CPF.size' => 'Deve ter exatamente 11 caracteres.',
             'CPF.unique' => 'CPF já está cadastrado.',
