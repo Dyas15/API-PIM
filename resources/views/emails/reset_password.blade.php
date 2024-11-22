@@ -71,7 +71,7 @@
         </div>
         <div class="content">
             <p>Você solicitou uma redefinição de senha. Clique no link abaixo para redefinir sua senha:</p>
-            <p><a href="{{ url('api/redefinicao', $token) }}">Redefinir Senha</a></p>
+            <p><a href="http://localhost:8000/api/redefinicao/{{$token}}">Redefinir Senha</a></p>
             <p>Se você não solicitou a redefinição de senha, ignore este e-mail.</p>
         </div>
         <div class="footer">
