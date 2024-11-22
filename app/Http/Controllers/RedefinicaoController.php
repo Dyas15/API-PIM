@@ -42,7 +42,7 @@ public function ResetarSenha(Request $request)
             ->first();
 
         if (!$passwordReset) {
-            return response()->json(['message' => 'Token inválido ou expirado.'], 400);
+            return redirect('/api/redefinicao/token-invalido');
         }
 
         $user = DB::table('LOGINS_CLIENTES')->where('cpf', $request->cpf)->first();

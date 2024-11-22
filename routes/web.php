@@ -97,6 +97,9 @@ $router->group(['prefix' => '/api/redefinicao'], function () use ($router) {
     $router->get('/{token}', function ($token) {
         return view('emails.reset')->with(['token' => $token]);
     });
+    $router->get('/token-invalido', function () {
+        return view('emails.token_invalid');
+    });
     $router->post('/resetar', 'RedefinicaoController@ResetarSenha');
     $router->post('/enviar', 'RedefinicaoController@EnviarEmailDeReset');
 });
