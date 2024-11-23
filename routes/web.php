@@ -104,5 +104,7 @@ $router->group(['prefix' => '/api/redefinicao'], function () use ($router) {
     $router->post('/enviar', 'RedefinicaoController@EnviarEmailDeReset');
 });
 
-
+$router->options('/images/{image}', function () {
+    return response('', 200);
+});
 $router->get('/teste', 'TesteController@index');

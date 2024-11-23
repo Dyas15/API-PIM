@@ -81,6 +81,52 @@
             margin-right: 10px;
         }
     </style>
+    <script>
+        function validarFormulario(event) {
+            const cpf = document.getElementById('cpf').value;
+            const senha = document.getElementById('senha').value;
+            const confirmacao = document.getElementById('confirmação').value;
+
+            if (!validarCPF(cpf)) {
+                alert("CPF inválido.");
+                event.preventDefault();
+                return;
+            }
+
+            if (senha.length <= 5) {
+                alert("A senha deve ter mais de 5 caracteres.");
+                event.preventDefault();
+                return;
+            }
+
+            if (senha !== confirmacao) {
+                alert("As senhas não coincidem.");
+                event.preventDefault();
+                return;
+            }
+        }
+
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, ''); 
+            if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+            let soma = 0, resto;
+            for (let i = 1; i <= 9; i++) {
+                soma += parseInt(cpf.charAt(i - 1)) * (11 - i);
+            }
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(9))) return false;
+
+            soma = 0;
+            for (let i = 1; i <= 10; i++) {
+                soma += parseInt(cpf.charAt(i - 1)) * (12 - i);
+            }
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            return resto === parseInt(cpf.charAt(10));
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -88,19 +134,19 @@
             <img src="{{ url('/') }}/images/logo.png" alt="Logo">
             <h1>Redefinição de Senha</h1>
         </div>
-        <form action="resetar" method="POST">
+        <form action="resetar" method="POST" onsubmit="validarFormulario(event)">
             <input type="hidden" name="token" value="{{ $token }}">
             <div class="input">
                 <label for="cpf">CPF</label>
-                <input type="text" id="cpf" name="cpf" required>
+                <input type="text" id="cpf" name="cpf" maxlength="11" minlength="11" required>
             </div>
             <div class="input">
                 <label for="senha">Nova Senha</label>
-                <input type="password" id="senha" name="senha" required>
+                <input type="password" id="senha" name="senha" minlength="6" required>
             </div>
             <div class="input">
                 <label for="confirmação">Confirme a Nova Senha</label>
-                <input type="password" id="confirmação" name="confirmação" required>
+                <input type="password" id="confirmação" name="confirmação" minlength="6" required>
             </div>
             <button type="submit">Redefinir Senha</button>
         </form>
