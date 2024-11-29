@@ -90,7 +90,7 @@ class ClientesController extends Controller
                 return $cliente;
             }
 
-            $dadosUsuario = DB::table('LOGINS_USUARIOS')->where('cpf', $cpf)->delete() > 0;
+            $dadosUsuario = DB::table('LOGINS_CLIENTES')->where('cpf', $cpf)->delete() > 0;
             $dadosCliente = DB::table('CLIENTES')->where('cpf', $cpf)->delete() > 0;
 
 
