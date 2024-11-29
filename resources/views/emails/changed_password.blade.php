@@ -59,7 +59,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ url('/') }}/images/logo.png" alt="Logo">
+            <img src="{{ url('/') }}/images/cadeado_senha.png" alt="Logo">
             <h1>Senha Alterada</h1>
         </div>
         <div class="message">
